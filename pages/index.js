@@ -61,9 +61,15 @@ export default function Home() {
       alert("Chưa có bản ghi âm.");
       return;
     }
+    // In ra giá trị của selectedPractice và chuẩn hóa ký tự đặc biệt
+    console.log("Selected practice (raw):", selectedPractice);
+    const normalizedText = selectedPractice.replace(/[‘’]/g, "'");
+    console.log("Normalized text:", normalizedText);
+
     // Lấy blob từ audioUrl
     const response = await fetch(audioUrl);
     const blob = await response.blob();
+
     // Đọc blob dưới dạng base64
     const reader = new FileReader();
     reader.readAsDataURL(blob);
@@ -76,12 +82,13 @@ export default function Home() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          text: selectedPractice,
+          text: normalizedText,
           audio: base64data,
           mimeType: blob.type
         })
       });
       const json = await res.json();
+      console.log("Kết quả từ API:", json);
       setResult(json);
     };
   };
